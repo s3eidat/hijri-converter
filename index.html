@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Hijri Converter — Hijri to Gregorian and Back, Umm al-Qura | S3eidat Tools</title>
+<meta name="description" content="Convert Gregorian dates to Hijri and Hijri to Gregorian with the Umm al-Qura calendar. Today's date in both, side-by-side month calendars, Arabic and English month names, and your age in Hijri years. Free and private.">
+<meta property="og:title" content="Hijri Converter — محوّل التاريخ الهجري">
+<meta property="og:description" content="Hijri ⇄ Gregorian dates, month calendars side by side, age in Hijri years. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/hijri-converter/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/hijri-converter/">
+<meta property="og:image" content="https://s3eidat.github.io/hijri-converter/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hijri Converter — Hijri to Gregorian dates and back">
+<meta name="twitter:description" content="Hijri to Gregorian dates and back. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/hijri-converter/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Hijri Converter", "url": "https://s3eidat.github.io/hijri-converter/", "description": "Hijri to Gregorian dates and back. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/hijri-converter/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="hijri-converter">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Hijri Converter <span class="hc-ar-h" lang="ar" dir="rtl">محوّل التاريخ الهجري</span></h1>
+    <p>Hijri to Gregorian and back with the Umm al-Qura calendar, today's date in both, month calendars side by side, and your age in Hijri years.</p>
+  </section>
+
+  <section class="card hc-today" id="today" aria-live="polite">
+    <div class="hc-today-l">
+      <span class="faint">Today <span lang="ar">· اليوم</span></span>
+      <b class="hc-big" id="t-ar" lang="ar" dir="rtl"></b>
+      <span id="t-en" class="muted"></span>
+    </div>
+    <div class="hc-today-r">
+      <b id="t-g"></b>
+      <span id="t-g-ar" lang="ar" dir="rtl" class="muted"></span>
+      <button class="btn small ghost" id="go-today">Go to today <span lang="ar" class="hc-sub">· انتقل لليوم</span></button>
+    </div>
+  </section>
+
+  <div class="grid-2 hc-grid mt">
+    <section class="card stack">
+      <h2>Gregorian → Hijri <small lang="ar" dir="rtl">من الميلادي إلى الهجري</small></h2>
+      <label class="field">Gregorian date <span class="hc-sub" lang="ar">التاريخ الميلادي</span>
+        <input class="input" id="g" type="date" min="1882-11-12" max="2174-11-25">
+      </label>
+      <div class="hc-res" id="g-res"></div>
+      <div class="row end"><button class="btn small" id="g-copy"><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+    </section>
+
+    <section class="card stack">
+      <h2>Hijri → Gregorian <small lang="ar" dir="rtl">من الهجري إلى الميلادي</small></h2>
+      <div class="row hc-hrow">
+        <label class="field hc-d">Day <span class="hc-sub" lang="ar">اليوم</span><input class="input" id="hd" inputmode="numeric" autocomplete="off"></label>
+        <label class="field grow">Month <span class="hc-sub" lang="ar">الشهر</span><select class="select" id="hm"></select></label>
+        <label class="field hc-y">Year <span class="hc-sub" lang="ar">السنة</span><input class="input" id="hy" inputmode="numeric" autocomplete="off"></label>
+      </div>
+      <div class="hc-res" id="h-res"></div>
+      <div class="row end"><button class="btn small" id="h-copy"><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+    </section>
+  </div>
+
+  <div class="row hc-opts mt">
+    <div class="row"><span class="faint">Week starts <span lang="ar">· بداية الأسبوع</span></span>
+      <div class="seg" id="wk" role="group" aria-label="Week starts on">
+        <button data-v="6" aria-pressed="true">Sat <span lang="ar">السبت</span></button>
+        <button data-v="0" aria-pressed="false">Sun <span lang="ar">الأحد</span></button>
+        <button data-v="1" aria-pressed="false">Mon <span lang="ar">الاثنين</span></button>
+      </div>
+    </div>
+    <div class="row"><span class="faint">Arabic months <span lang="ar">· أسماء الأشهر</span></span>
+      <div class="seg" id="gm" role="group" aria-label="Arabic Gregorian month names">
+        <button data-v="intl" aria-pressed="true" lang="ar">يناير</button>
+        <button data-v="levant" aria-pressed="false" lang="ar">كانون الثاني</button>
+      </div>
+    </div>
+    <div class="row"><span class="faint">Digits <span lang="ar">· الأرقام</span></span>
+      <div class="seg" id="dg" role="group" aria-label="Digits in Arabic text">
+        <button data-v="ar" aria-pressed="true" lang="ar">١٢٣</button>
+        <button data-v="en" aria-pressed="false">123</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2 hc-grid mt">
+    <section class="card">
+      <div class="row between hc-cal-head" dir="rtl" lang="ar">
+        <button class="btn icon ghost" id="h-prev" aria-label="الشهر الهجري السابق">‹</button>
+        <h2 class="hc-cal-title" id="h-title"></h2>
+        <button class="btn icon ghost" id="h-next" aria-label="الشهر الهجري التالي">›</button>
+      </div>
+      <div class="hc-cal" id="h-cal" dir="rtl" lang="ar"></div>
+    </section>
+    <section class="card">
+      <div class="row between hc-cal-head">
+        <button class="btn icon ghost" id="g-prev" aria-label="Previous Gregorian month">‹</button>
+        <h2 class="hc-cal-title" id="g-title"></h2>
+        <button class="btn icon ghost" id="g-next" aria-label="Next Gregorian month">›</button>
+      </div>
+      <div class="hc-cal" id="g-cal"></div>
+    </section>
+  </div>
+  <p class="faint hc-legend">Click any day to convert it. Big number: that calendar's day; small number: the other calendar's.</p>
+
+  <section class="card mt stack">
+    <h2>Age in Hijri years <small lang="ar">العمر بالسنوات الهجرية</small></h2>
+    <div class="row hc-age-row">
+      <label class="field">Date of birth (Gregorian) <span class="hc-sub" lang="ar">تاريخ الميلاد</span>
+        <input class="input" id="dob" type="date" min="1882-11-12" max="2174-11-25">
+      </label>
+      <div class="stats grow" id="age"></div>
+    </div>
+    <p class="faint" id="age-note"></p>
+  </section>
+
+  <p class="faint mt hc-foot">Dates use the Umm al-Qura calendar built into your browser (supported 1300–1600 AH, 1882–2174 CE). Official dates for Ramadan, Eid and Hajj are set by moon sighting and can differ by a day from the calculated calendar, and from country to country.
+  <span lang="ar" dir="rtl" class="hc-foot-ar">التواريخ محسوبة بتقويم أم القرى، وقد تختلف المواعيد الرسمية المعتمدة على رؤية الهلال بيوم واحد.</span></p>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
